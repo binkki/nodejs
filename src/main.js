@@ -1,4 +1,5 @@
 import { Transform } from "node:stream";
+import { homedir } from 'node:os';
 import * as contants from "./constants.js";
 
 let userName = "";
@@ -6,6 +7,11 @@ let userName = "";
 const start = () => {
   userName = process.env[contants.USER_NAME_ENV_KEY] || contants.DEFAULT_USER_NAME;
   console.log(`${contants.START_MESSAGE}${userName}`);
+  console.log(getCurrentDirectory());
+}
+
+const getCurrentDirectory = () => {
+  return `${contants.CURRENT_DIRECTORY} ${homedir}`;
 }
 
 const readCommand = new Transform({
@@ -16,7 +22,7 @@ const readCommand = new Transform({
         process.emit(contants.EXIT_SIGNAL);
         break;
       default:
-        callback(null, contants.WRONG_COMMAND);
+        callback(null, getCurrentDirectory() + contants.EOF);
     }
   },
 });
