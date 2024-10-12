@@ -1,8 +1,10 @@
+import * as contants from "./constants.js"
+
 let userName = "";
 
 const start = () => {
-  userName = process.env["npm_config_username"] || "User";
-  console.log(`Welcome to the File Manager, ${userName}`);
+  userName = process.env[contants.USER_NAME_ENV_KEY] || contants.DEFAULT_USER_NAME;
+  console.log(`${contants.START_MESSAGE}${userName}`);
 }
 
 process.stdin.pipe(process.stdout);
