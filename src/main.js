@@ -1,50 +1,48 @@
 import { Transform } from "node:stream";
 import { homedir } from 'node:os';
 import * as contants from "./constants.js";
+import { 
+  getCurrentDirectory,
+  changeDirectory,
+  getNewPath
+} from "./navigation.js";
 
-let userName = "";
-let currentDirr = homedir();
+
+const appData = {
+  userName: "",
+  currentDirr: homedir(),
+}
 
 const start = () => {
-  userName = process.env[contants.USER_NAME_ENV_KEY] || contants.DEFAULT_USER_NAME;
-  console.log(`${contants.START_MESSAGE}${userName}`);
-  console.log(getCurrentDirectory());
-  process.chdir(currentDirr);
-}
-
-const getCurrentDirectory = () => {
-  return `${contants.CURRENT_DIRECTORY} ${currentDirr}`;
-}
-
-const changeDirectory = (newDirectory) => {
-  try {
-    process.chdir(newDirectory);
-    currentDirr = process.cwd();
-  }
-  catch (error) {
-    console.log(`${contants.ERROR_COMMAND}${error}`);
-  }
+  appData.userName = process.env[contants.USER_NAME_ENV_KEY] || contants.DEFAULT_USER_NAME;
+  console.log(`${contants.START_MESSAGE}${appData.userName}`);
+  console.log(getCurrentDirectory(appData));
+  changeDirectory(appData.currentDirr, appData);
 }
 
 const readCommand = new Transform({
   transform(chunk, encoding, callback) {
     const command  = String.fromCharCode.apply(null, new Uint16Array(chunk)).trim();
-    switch (command) {
-      case contants.COMMAND_EXIT:
-        process.emit(contants.EXIT_SIGNAL);
-        break;
-      case contants.COMMAND_UP:
-        changeDirectory(contants.COMMAND_UP_DIRECTORY);
-        callback(null, getCurrentDirectory() + contants.EOF);
-        break;
-      default:
-        callback(null, contants.WRONG_COMMAND);
+    if (command === contants.COMMAND_EXIT) {
+      process.emit(contants.EXIT_SIGNAL);
+    }
+    else if (command === contants.COMMAND_UP) {
+      changeDirectory(contants.COMMAND_UP_DIRECTORY, appData);
+      callback(null, getCurrentDirectory(appData) + contants.EOF);
+    }
+    else if (command.startsWith(contants.COMMAND_CD)) {
+      const newPath = getNewPath(command.replace(contants.COMMAND_CD, '').trim());
+      changeDirectory(newPath, appData);
+      callback(null, getCurrentDirectory(appData) + contants.EOF);
+    }
+    else {
+      callback(null, contants.WRONG_COMMAND);
     }
   },
 });
 
 process.on(contants.EXIT_SIGNAL, function() {
-  console.log(contants.EXIT_MESSAGE.replace(contants.EXIT_DEFAULT_USERNAME, userName));
+  console.log(contants.EXIT_MESSAGE.replace(contants.EXIT_DEFAULT_USERNAME, appData.userName));
   process.exit();
 });
 

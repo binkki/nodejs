@@ -13,5 +13,9 @@ export const EXIT_SIGNAL = "SIGINT";
 export const CURRENT_DIRECTORY = "You are currently in";
 export const COMMAND_UP = "up";
 export const COMMAND_UP_DIRECTORY = "..";
+export const COMMAND_CD = "cd";
+
+export const WIN_PLATFORM = "win32";
+export const LINUX_HOME_DRIVE = "~";
 
 export const EOF = "\n\r";
