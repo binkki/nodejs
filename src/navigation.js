@@ -1,4 +1,5 @@
-import path from 'path'
+import path from "path";
+import fs from "fs";
 import * as contants from "./constants.js";
 
 export const getCurrentDirectory = (appData) => {
@@ -26,4 +27,27 @@ export const getNewPath = (newPath) => {
   return path.isAbsolute(newPath)
     ? path.resolve(rootOptions.root, newPath)
     : path.join(process.cwd(), newPath);
+}
+
+export const lsDirectory = async (appData) => {
+  const result = [];
+  fs.readdirSync(
+    appData.currentDirr, 
+    {
+      withFileTypes: true
+    }
+  ).forEach((file) => {
+    result.push({
+      Name: file.name,
+      Type: file.isFile() ? contants.LS_TYPE_FILE : contants.LS_TYPE_DIRECTORY
+    })
+  });
+  result.sort((a, b) => {
+    if (a.Type < b.Type)
+      return -1;
+    if (a.Type > b.Type)
+      return 1;
+    return 0;
+  })
+  console.table(result);
 }

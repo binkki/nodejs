@@ -1,10 +1,11 @@
 import { Transform } from "node:stream";
-import { homedir } from 'node:os';
+import { homedir } from "node:os";
 import * as contants from "./constants.js";
 import { 
   getCurrentDirectory,
   changeDirectory,
-  getNewPath
+  getNewPath,
+  lsDirectory
 } from "./navigation.js";
 
 
@@ -33,6 +34,9 @@ const readCommand = new Transform({
     else if (command.startsWith(contants.COMMAND_CD)) {
       const newPath = getNewPath(command.replace(contants.COMMAND_CD, '').trim());
       changeDirectory(newPath, appData);
+      callback(null, getCurrentDirectory(appData) + contants.EOF);
+    } else if (command === contants.COMMAND_LS) {
+      lsDirectory(appData);
       callback(null, getCurrentDirectory(appData) + contants.EOF);
     }
     else {

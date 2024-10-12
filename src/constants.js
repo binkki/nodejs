@@ -14,6 +14,9 @@ export const CURRENT_DIRECTORY = "You are currently in";
 export const COMMAND_UP = "up";
 export const COMMAND_UP_DIRECTORY = "..";
 export const COMMAND_CD = "cd";
+export const COMMAND_LS = "ls";
+export const LS_TYPE_FILE = "file";
+export const LS_TYPE_DIRECTORY = "directory";
 
 export const WIN_PLATFORM = "win32";
 export const LINUX_HOME_DRIVE = "~";
