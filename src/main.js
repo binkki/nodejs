@@ -5,8 +5,8 @@ import {
   getCurrentDirectory,
   changeDirectory,
   getNewPath,
-  lsDirectory
-} from "./navigation.js";
+} from "./navigation/cd.js";
+import { lsDirectory } from "./navigation/ls.js";
 
 
 const appData = {
