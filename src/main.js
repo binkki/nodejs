@@ -1,5 +1,5 @@
 import { Transform } from "node:stream";
-import { homedir } from "node:os";
+import os from 'os';
 import * as contants from "./constants.js";
 import { 
   getCurrentDirectory,
@@ -10,11 +10,12 @@ import { lsDirectory } from "./navigation/ls.js";
 import { catFile } from "./files/cat.js";
 import { addFile } from "./files/add.js";
 import { deleteFile } from "./files/rm.js";
+import { getOsInfo } from "./os/os.js";
 
 
 const appData = {
   userName: "",
-  currentDirr: homedir(),
+  currentDirr: os.homedir(),
 }
 
 const start = () => {
@@ -32,36 +33,44 @@ const readCommand = new Transform({
     }
     else if (command === contants.COMMAND_UP) {
       changeDirectory(contants.COMMAND_UP_DIRECTORY, appData);
-      callback(null, getCurrentDirectory(appData) + contants.EOF);
+      callback(null, getCurrentDirectory(appData) + os.EOL);
     }
     else if (command.startsWith(contants.COMMAND_CD)) {
       const newPath = getNewPath(command.replace(contants.COMMAND_CD, '').trim());
       changeDirectory(newPath, appData);
-      callback(null, getCurrentDirectory(appData) + contants.EOF);
-    } else if (command === contants.COMMAND_LS) {
+      callback(null, getCurrentDirectory(appData) + os.EOL);
+    }
+    else if (command === contants.COMMAND_LS) {
       lsDirectory(appData)
-        .then(() => callback(null, getCurrentDirectory(appData) + contants.EOF));      
-    } else if (command.startsWith(contants.COMMAND_CAT)) {
+        .then(() => callback(null, getCurrentDirectory(appData) + os.EOL));      
+    }
+    else if (command.startsWith(contants.COMMAND_CAT)) {
       const newPath = getNewPath(command.replace(contants.COMMAND_CAT, '').trim());
       catFile(newPath)
-        .then(() => callback(null, getCurrentDirectory(appData) + contants.EOF))      
-    } else if (command.startsWith(contants.COMMAND_ADD)) {
+        .then(() => callback(null, getCurrentDirectory(appData) + os.EOL))      
+    }
+    else if (command.startsWith(contants.COMMAND_ADD)) {
       const newPath = getNewPath(command.replace(contants.COMMAND_ADD, '').trim());
       addFile(newPath)
-        .then(() => callback(null, getCurrentDirectory(appData) + contants.EOF))      
-    } else if (command.startsWith(contants.COMMAND_DELETE)) {
+        .then(() => callback(null, getCurrentDirectory(appData) + os.EOL))      
+    }
+    else if (command.startsWith(contants.COMMAND_DELETE)) {
       const newPath = getNewPath(command.replace(contants.COMMAND_DELETE, '').trim());
       deleteFile(newPath)
-        .then(() => callback(null, getCurrentDirectory(appData) + contants.EOF))      
-    }    
+        .then(() => callback(null, getCurrentDirectory(appData) + os.EOL))      
+    }
+    else if (command.startsWith(contants.COMMAND_OS)) {
+      getOsInfo(command.replace(contants.COMMAND_OS, '').trim())
+        .then(() => callback(null, getCurrentDirectory(appData) + os.EOL))      
+    }   
     else {
-      callback(null, contants.WRONG_COMMAND);
+      callback(null, contants.WRONG_COMMAND + os.EOL);
     }
   },
 });
 
 process.on(contants.EXIT_SIGNAL, function() {
-  console.log(contants.EXIT_MESSAGE.replace(contants.EXIT_DEFAULT_USERNAME, appData.userName));
+  console.log(os.EOL + contants.EXIT_MESSAGE.replace(contants.EXIT_DEFAULT_USERNAME, appData.userName));
   process.exit();
 });
 

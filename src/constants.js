@@ -2,7 +2,7 @@ export const DEFAULT_USER_NAME = "User";
 export const USER_NAME_ENV_KEY = "npm_config_username";
 export const START_MESSAGE = "Welcome to the File Manager, ";
 
-export const WRONG_COMMAND = "Invalid input\n";
+export const WRONG_COMMAND = "Invalid input";
 export const ERROR_COMMAND = "Operation failed: ";
 
 export const COMMAND_EXIT = ".exit";
@@ -24,5 +24,9 @@ export const LINUX_HOME_DRIVE = "~";
 export const COMMAND_CAT = "cat";
 export const COMMAND_ADD = "add";
 export const COMMAND_DELETE = "rm";
-
-export const EOF = "\n\r";
+export const COMMAND_OS = "os";
+export const COMMAND_OS_EOL = "--EOL";
+export const COMMAND_OS_CPUS = "--cpus";
+export const COMMAND_OS_HOMEDIR = "--homedir";
+export const COMMAND_OS_USERNAME = "--username";
+export const COMMAND_OS_ARCHITECTURE = "--architecture";
