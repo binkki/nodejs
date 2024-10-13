@@ -39,8 +39,8 @@ const readCommand = new Transform({
       changeDirectory(newPath, appData);
       callback(null, getCurrentDirectory(appData) + contants.EOF);
     } else if (command === contants.COMMAND_LS) {
-      lsDirectory(appData);
-      callback(null, getCurrentDirectory(appData) + contants.EOF);
+      lsDirectory(appData)
+        .then(() => callback(null, getCurrentDirectory(appData) + contants.EOF));      
     } else if (command.startsWith(contants.COMMAND_CAT)) {
       const newPath = getNewPath(command.replace(contants.COMMAND_CAT, '').trim());
       catFile(newPath)
