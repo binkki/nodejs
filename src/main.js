@@ -11,6 +11,7 @@ import { catFile } from "./files/cat.js";
 import { addFile } from "./files/add.js";
 import { deleteFile } from "./files/rm.js";
 import { getOsInfo } from "./os/os.js";
+import { calculateHash } from "./hash/hash.js";
 
 
 const appData = {
@@ -62,7 +63,11 @@ const readCommand = new Transform({
     else if (command.startsWith(contants.COMMAND_OS)) {
       getOsInfo(command.replace(contants.COMMAND_OS, '').trim())
         .then(() => callback(null, getCurrentDirectory(appData) + os.EOL))      
-    }   
+    }
+    else if (command.startsWith(contants.COMMAND_HASH)) {
+      calculateHash(command)
+        .then(() => callback(null, getCurrentDirectory(appData) + os.EOL))      
+    } 
     else {
       callback(null, contants.WRONG_COMMAND + os.EOL);
     }

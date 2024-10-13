@@ -30,3 +30,4 @@ export const COMMAND_OS_CPUS = "--cpus";
 export const COMMAND_OS_HOMEDIR = "--homedir";
 export const COMMAND_OS_USERNAME = "--username";
 export const COMMAND_OS_ARCHITECTURE = "--architecture";
+export const COMMAND_HASH = "hash";
