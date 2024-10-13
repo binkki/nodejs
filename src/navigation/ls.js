@@ -25,6 +25,6 @@ export const lsDirectory = async (appData) => {
       console.table(result);
     }
     catch (error) {
-        console.log(`${contants.ERROR_COMMAND}${error}`);
+      console.log(`${contants.ERROR_COMMAND}${error}`);
     }    
   }
