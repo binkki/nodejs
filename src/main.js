@@ -9,6 +9,7 @@ import {
 import { lsDirectory } from "./navigation/ls.js";
 import { catFile } from "./files/cat.js";
 import { addFile } from "./files/add.js";
+import { deleteFile } from "./files/rm.js";
 
 
 const appData = {
@@ -47,6 +48,10 @@ const readCommand = new Transform({
     } else if (command.startsWith(contants.COMMAND_ADD)) {
       const newPath = getNewPath(command.replace(contants.COMMAND_ADD, '').trim());
       addFile(newPath)
+        .then(() => callback(null, getCurrentDirectory(appData) + contants.EOF))      
+    } else if (command.startsWith(contants.COMMAND_DELETE)) {
+      const newPath = getNewPath(command.replace(contants.COMMAND_DELETE, '').trim());
+      deleteFile(newPath)
         .then(() => callback(null, getCurrentDirectory(appData) + contants.EOF))      
     }    
     else {

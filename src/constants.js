@@ -23,5 +23,6 @@ export const LINUX_HOME_DRIVE = "~";
 
 export const COMMAND_CAT = "cat";
 export const COMMAND_ADD = "add";
+export const COMMAND_DELETE = "rm";
 
 export const EOF = "\n\r";
