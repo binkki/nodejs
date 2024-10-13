@@ -21,4 +21,6 @@ export const LS_TYPE_DIRECTORY = "directory";
 export const WIN_PLATFORM = "win32";
 export const LINUX_HOME_DRIVE = "~";
 
+export const COMMAND_CAT = "cat";
+
 export const EOF = "\n\r";

@@ -7,6 +7,7 @@ import {
   getNewPath,
 } from "./navigation/cd.js";
 import { lsDirectory } from "./navigation/ls.js";
+import { catFile } from "./files/cat.js";
 
 
 const appData = {
@@ -38,6 +39,10 @@ const readCommand = new Transform({
     } else if (command === contants.COMMAND_LS) {
       lsDirectory(appData);
       callback(null, getCurrentDirectory(appData) + contants.EOF);
+    } else if (command.startsWith(contants.COMMAND_CAT)) {
+      const newPath = getNewPath(command.replace(contants.COMMAND_CAT, '').trim());
+      catFile(newPath)
+        .then(() => callback(null, getCurrentDirectory(appData) + contants.EOF))      
     }
     else {
       callback(null, contants.WRONG_COMMAND);
