@@ -67,6 +67,8 @@ const runCommand = async (commandName, commandOptions) => {
       deleteFile(commandOptions.join(' '), appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_RENAME)
       renameFile(commandOptions[0], commandOptions[1], appData).then((data) => resolve(data));
+    if (commandName === contants.COMMAND_COPY)
+      renameFile(commandOptions[0], commandOptions[1], appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_OS)
       getOsInfo(commandOptions[0], appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_HASH)
