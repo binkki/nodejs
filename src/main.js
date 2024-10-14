@@ -15,6 +15,8 @@ import { copyFile } from "./files/cp.js";
 import { moveFile } from "./files/mv.js";
 import { getOsInfo } from "./os/os.js";
 import { calculateHash } from "./hash/hash.js";
+import { compress } from "./zip/compress.js";
+import { decompress } from "./zip/decompress.js";
 
 
 const appData = {
@@ -77,6 +79,10 @@ const runCommand = async (commandName, commandOptions) => {
       getOsInfo(commandOptions[0], appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_HASH)
       calculateHash(commandOptions.join(' '), appData).then((data) => resolve(data));
+    if (commandName === contants.COMMAND_COMPRESS)
+      compress(commandOptions[0], commandOptions[1], appData).then((data) => resolve(data));
+    if (commandName === contants.COMMAND_DECOMPRESS)
+      decompress(commandOptions[0], commandOptions[1], appData).then((data) => resolve(data));
   });
 }
 

@@ -13,7 +13,7 @@ export const copyFile = async (oldPath, newPath, appData) => {
       if (readResult.error !== "") {
         resolve(readResult.error + os.EOL + currentDirectory);
       } else {
-        const writeStream = fs.createWriteStream(getNewPath(newPath));
+        const writeStream = fs.createWriteStream(getNewPath(newPath), { flags: "a" });
         writeStream.write(readResult.data);
         writeStream.close();
         writeStream.on('error', (error) => console.log(`${contants.ERROR_COMMAND}${error}`));
