@@ -11,6 +11,8 @@ import { catFile } from "./files/cat.js";
 import { addFile } from "./files/add.js";
 import { deleteFile } from "./files/rm.js";
 import { renameFile } from "./files/rn.js";
+import { copyFile } from "./files/cp.js";
+import { moveFile } from "./files/mv.js";
 import { getOsInfo } from "./os/os.js";
 import { calculateHash } from "./hash/hash.js";
 
@@ -68,7 +70,9 @@ const runCommand = async (commandName, commandOptions) => {
     if (commandName === contants.COMMAND_RENAME)
       renameFile(commandOptions[0], commandOptions[1], appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_COPY)
-      renameFile(commandOptions[0], commandOptions[1], appData).then((data) => resolve(data));
+      copyFile(commandOptions[0], commandOptions[1], appData).then((data) => resolve(data));
+    if (commandName === contants.COMMAND_MOVE)
+      moveFile(commandOptions[0], commandOptions[1], appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_OS)
       getOsInfo(commandOptions[0], appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_HASH)
