@@ -1,23 +1,27 @@
 import fs from "fs";
+import os from "os";
 import { createHash } from "node:crypto";
 import * as contants from "../constants.js";
-import { getNewPath } from "../navigation/cd.js";
+import {
+  getCurrentDirectory,
+  getNewPath,
+} from "../navigation/cd.js";
 
-export const calculateHash = async (command) => {
-  const commandPath = getNewPath(command.replace(contants.COMMAND_HASH, '').trim());
+export const calculateHash = async (filePath, appData) => {
+  const currentDirectory = getCurrentDirectory(appData);
+  let result = "";
   return new Promise((resolve) => {
-    const readStream = fs.createReadStream(commandPath);
+    const readStream = fs.createReadStream(getNewPath(filePath));
     const fileText = [];
     readStream.on('data', chunk => fileText.push(chunk));
     readStream.on('error', (error) => {
-      console.log(`${contants.ERROR_COMMAND}${error}`);
+      result = `${contants.ERROR_COMMAND}${error}` + os.EOL;
     });
     readStream.on('end', () => { 
-      const hashText = createHash("sha256").update(fileText.join()).digest('hex');
-      console.log(hashText);  
+      result = createHash("sha256").update(fileText.join()).digest('hex') + os.EOL; 
     }); 
     readStream.on('close', () => {
-      resolve();
+      resolve(result + currentDirectory);
     });    
   });
 }

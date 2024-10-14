@@ -1,18 +1,23 @@
 import path from "path";
+import os from 'os';
 import * as contants from "../constants.js";
 
 export const getCurrentDirectory = (appData) => {
-  return `${contants.CURRENT_DIRECTORY} ${appData.currentDirr}`;
+  return `${contants.CURRENT_DIRECTORY} ${appData.currentDirr}` + os.EOL;
 }
 
-export const changeDirectory = (newDirectory, appData) => {
-  try {
-    process.chdir(newDirectory);
-    appData.currentDirr = process.cwd();
-  }
-  catch (error) {
-    console.log(`${contants.ERROR_COMMAND}${error}`);
-  }
+export const changeDirectory = async (newDirectory, appData) => {
+  return new Promise((resolve) => {
+    let result = "";
+    try {
+      process.chdir(newDirectory);
+      appData.currentDirr = process.cwd();
+    }
+    catch (error) {
+      result = `${contants.ERROR_COMMAND}${error}` + os.EOL;
+    }
+    resolve(result + getCurrentDirectory(appData));
+  });
 }
 
 const getPathOptions = (newPath) => {

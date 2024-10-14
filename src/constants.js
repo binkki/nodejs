@@ -31,3 +31,29 @@ export const COMMAND_OS_HOMEDIR = "--homedir";
 export const COMMAND_OS_USERNAME = "--username";
 export const COMMAND_OS_ARCHITECTURE = "--architecture";
 export const COMMAND_HASH = "hash";
+export const COMMAND_RENAME = "rn";
+export const COMMAND_COPY = "cp";
+export const COMMAND_MOVE = "mv";
+export const COMMAND_COMPRESS = "compress";
+export const COMMAND_DECOMPRESS = "decompress";
+
+export const notOptionsCommand = [
+  COMMAND_UP,
+  COMMAND_LS,
+  COMMAND_EXIT
+];
+export const oneOptionCommand = [
+  COMMAND_CD,
+  COMMAND_CAT,
+  COMMAND_ADD,
+  COMMAND_DELETE,
+  COMMAND_OS,
+  COMMAND_HASH
+];
+export const twoOptionsCommand = [
+  COMMAND_RENAME,
+  COMMAND_COPY,
+  COMMAND_MOVE,
+  COMMAND_COMPRESS,
+  COMMAND_DECOMPRESS,
+];

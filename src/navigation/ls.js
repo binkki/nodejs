@@ -1,10 +1,13 @@
 
 import fs from "fs";
+import os from "os";
 import * as contants from "../constants.js";
+import { getCurrentDirectory } from "./cd.js";
 
 export const lsDirectory = async (appData) => {
     const result = [];
-    return new Promise((reslove) => {
+    const currentDirectory = getCurrentDirectory(appData);
+    return new Promise((resolve) => {
       fs.readdir(
         appData.currentDirr, 
         {
@@ -12,7 +15,7 @@ export const lsDirectory = async (appData) => {
         },
         (error, files) => {
           if (error) {
-            console.log(`${contants.ERROR_COMMAND}${error}`);
+            resolve(`${contants.ERROR_COMMAND}${error}` + os.EOL + currentDirectory);
           } else {
             files.forEach((file) => {
               result.push({
@@ -28,7 +31,7 @@ export const lsDirectory = async (appData) => {
             })
             console.table(result);
           }
-          reslove();
+          resolve(currentDirectory);
         }
       )
     });
