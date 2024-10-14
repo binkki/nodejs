@@ -20,7 +20,7 @@ export const changeDirectory = async (newDirectory, appData) => {
   });
 }
 
-const getPathOptions = (newPath) => {
+export const getPathOptions = (newPath) => {
   return process.platform === contants.WIN_PLATFORM
     ? path.parse(newPath)
     : contants.LINUX_HOME_DRIVE;

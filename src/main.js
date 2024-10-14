@@ -10,6 +10,7 @@ import { lsDirectory } from "./navigation/ls.js";
 import { catFile } from "./files/cat.js";
 import { addFile } from "./files/add.js";
 import { deleteFile } from "./files/rm.js";
+import { renameFile } from "./files/rn.js";
 import { getOsInfo } from "./os/os.js";
 import { calculateHash } from "./hash/hash.js";
 
@@ -36,7 +37,7 @@ const validateCommand = (command) => {
     .filter((char) => char !== "");
   const validateCommand = 
     (contants.notOptionsCommand.includes(commandName) && commandOptions.length === 0)
-    || (contants.oneOptionCommand.includes(commandName) && commandOptions.length === 1)
+    || (contants.oneOptionCommand.includes(commandName))
     || (contants.twoOptionsCommand.includes(commandName) && commandOptions.length === 2);
   return {
     command: commandName,
@@ -52,22 +53,24 @@ const runCommand = async (commandName, commandOptions) => {
       changeDirectory(
         commandName === contants.COMMAND_UP
         ? contants.COMMAND_UP_DIRECTORY
-        : getNewPath(commandOptions[0]).trim(),
+        : getNewPath(commandOptions.join(' ')).trim(),
         appData
       ).then((data) => resolve(data));
     };
     if (commandName === contants.COMMAND_LS)
       lsDirectory(appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_CAT)
-      catFile(commandOptions[0], appData).then((data) => resolve(data));
+      catFile(commandOptions.join(' '), appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_ADD)
-      addFile(commandOptions[0], appData).then((data) => resolve(data));
+      addFile(commandOptions.join(' '), appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_DELETE)
-      deleteFile(commandOptions[0], appData).then((data) => resolve(data));
+      deleteFile(commandOptions.join(' '), appData).then((data) => resolve(data));
+    if (commandName === contants.COMMAND_RENAME)
+      renameFile(commandOptions[0], commandOptions[1], appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_OS)
       getOsInfo(commandOptions[0], appData).then((data) => resolve(data));
     if (commandName === contants.COMMAND_HASH)
-      calculateHash(commandOptions[0], appData).then((data) => resolve(data));
+      calculateHash(commandOptions.join(' '), appData).then((data) => resolve(data));
   });
 }
 
