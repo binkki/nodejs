@@ -21,9 +21,7 @@ export const changeDirectory = async (newDirectory, appData) => {
 }
 
 export const getPathOptions = (newPath) => {
-  return process.platform === contants.WIN_PLATFORM
-    ? path.parse(newPath)
-    : contants.LINUX_HOME_DRIVE;
+  return path.parse(newPath);
 }
 
 export const getNewPath = (newPath) => {
