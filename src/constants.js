@@ -57,3 +57,10 @@ export const twoOptionsCommand = [
   COMMAND_COMPRESS,
   COMMAND_DECOMPRESS,
 ];
+
+export const ESCAPE_CHARACTER = process.platform === WIN_PLATFORM
+  ? '`'
+  : '\\';
+export const QUOTE_CHARACTER = "'";
+export const DOUBLEQUOTE_CHARACTER = '"';
+export const SPACE_CHARACTER = " ";

@@ -34,14 +34,67 @@ const start = () => {
   changeDirectory(appData.currentDirr, appData);
 }
 
+const parseCommandOptions = (commandOptions) => {
+  const result = [];
+  let isQuoteOpen = false;
+  let isDoubleQouteOpen = false;
+  let isEscape = false;
+  let filePath = "";
+  commandOptions.forEach((x) => {
+    switch (x) {
+      case contants.SPACE_CHARACTER:
+        if (isDoubleQouteOpen || isQuoteOpen || isEscape) filePath += x;
+        else if (filePath) {
+          result.push(filePath);
+          filePath = "";
+        }
+        isEscape = false;  
+        break;
+      case contants.ESCAPE_CHARACTER:
+        if (isEscape) {
+          isEscape = false;
+          filePath += x;
+        } else isEscape = true;
+        break;
+      case contants.QUOTE_CHARACTER:
+        if (isEscape) {
+          filePath += x;
+        }
+        else if (isQuoteOpen) {
+          result.push(filePath);
+          filePath = "";
+          isQuoteOpen = false;
+        }
+        else isQuoteOpen = true;
+        isEscape = false;
+        break;
+      case contants.DOUBLEQUOTE_CHARACTER:
+        if (isEscape) {
+          filePath += x;
+        }
+        else if (isDoubleQouteOpen) {
+          result.push(filePath);
+          filePath = "";
+          isDoubleQouteOpen = false;
+        }
+        else isDoubleQouteOpen = true;
+        isEscape = false;
+        break;
+      default:
+        filePath += x;
+        isEscape = false;
+    }
+  });
+  if (filePath && !isDoubleQouteOpen && !isQuoteOpen) result.push(filePath);
+  return result;
+}
+
 const validateCommand = (command) => {
   const commandName = command.split(' ')[0];
-  const commandOptions = 
-    command.replace(commandName, "").trim().split(' ')
-    .filter((char) => char !== "");
+  const commandOptions = parseCommandOptions(command.replace(commandName, "").split(""));
   const validateCommand = 
     (contants.notOptionsCommand.includes(commandName) && commandOptions.length === 0)
-    || (contants.oneOptionCommand.includes(commandName))
+    || (contants.oneOptionCommand.includes(commandName) && commandOptions.length === 1)
     || (contants.twoOptionsCommand.includes(commandName) && commandOptions.length === 2);
   return {
     command: commandName,
