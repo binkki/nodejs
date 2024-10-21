@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+		"module": "node16",
+		"moduleResolution": "node16",
+		"resolveJsonModule": false,
+		"strict": true,
+    "noImplicitAny": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"rootDir": "./src/",
+    "outDir": "./dist/",
+    "lib": ["ES2022"],
+    "target": "ES2022",
+    "sourceMap": true,
+    "importsNotUsedAsValues": "remove",
+    "esModuleInterop": true,
+  },
+  "include": [
+    "./src/**/*.ts"
+  ],
+  "ts-node": {
+    "esm": true,
+    "transpileOnly": true,
+    "experimentalResolver": true
+  }
+}
