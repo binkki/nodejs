@@ -1,7 +1,7 @@
 import { ServerResponse } from 'http';
 
 export type UserInfo = {
-  id: string;
+  id?: string;
   username: string;
   age: number;
   hobbies: string[] | [];
@@ -10,7 +10,7 @@ export type UserInfo = {
 export type ResponseInfo = {
   res: ServerResponse;
   statusCode: number;
-  message: UserInfo[] | string;
+  message: Partial<UserInfo>[] | string;
 };
 
 export enum CrudOperations {

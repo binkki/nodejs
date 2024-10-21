@@ -37,3 +37,42 @@ export const getUser = (userId: string | undefined): UserInfo[] => {
     });
   return result;
 };
+
+export const addUser = (data: string): Partial<UserInfo> => {
+    let result : Partial<UserInfo> = { id: "" };
+    let isValidUser = true;
+    try {
+        const newUser = JSON.parse(data);
+        let username = '';
+        let age = -1;
+        let hobbies: string[] = Array();
+        Object.keys(newUser).forEach((key: string) => {
+            switch (key) {
+                case "username":
+                    username = newUser["username"];
+                    break;
+                case "age":
+                    age = Number(newUser["age"]);
+                    break;
+                case "hobbies": {
+                    const userHobby = newUser["hobbies"];
+                    userHobby.forEach((hobby: string) => hobbies.push(hobby));
+                    break;
+                }
+                default:
+                    isValidUser = false;
+            }
+        });
+        const parsedUser = {
+            id: String(users.length + 1),
+            username,
+            age,
+            hobbies
+        };
+        if (isValidUser && username !== '' && !Number.isNaN(age)) {
+            users.push(parsedUser);
+            result = users[users.length - 1];
+        }
+    } catch (error) {};
+    return result;
+}

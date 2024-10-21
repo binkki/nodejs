@@ -1,6 +1,6 @@
 import { ServerResponse, IncomingMessage } from 'http';
 import { parse } from 'url';
-import { getUser } from '../controller/userContoller.js';
+import { getUser, addUser } from '../controller/userContoller.js';
 import { CrudOperations, ResponseInfo } from '../types/types.js';
 
 const generateResponse = (data: ResponseInfo) => {
@@ -34,6 +34,23 @@ export const handleServerResponse = (req: IncomingMessage, res: ServerResponse) 
           : generateResponse({ res, statusCode: 404, message: 'Page not found' });
         break;
       case CrudOperations.POST:
+        if (pathname !== endpoint) {
+          generateResponse({ res, statusCode: 404, message: 'Page not found' });
+        } else {
+          let requestBody = "";
+          req.on("data", (chunk) => requestBody += chunk.toString());
+          req.on('end', () => {
+            if (requestBody.trim() !== "") {
+              const postResult = addUser(requestBody);
+              postResult.id === ""
+              ? generateResponse({ res, statusCode: 404, message: "Body doesn't contain required fields" })
+              : generateResponse({ res, statusCode: 201, message: [postResult] });
+            } else {
+              generateResponse({ res, statusCode: 404, message: "Body doesn't contain required fields" });
+            }          
+          });  
+        }
+        break;
       case CrudOperations.DELETE:
       case CrudOperations.PUT:
         break;
