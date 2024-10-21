@@ -1,6 +1,7 @@
+import { v4, validate } from "uuid";
 import { UserInfo } from '../types/types.js';
 
-const users: UserInfo[] = [
+let users: UserInfo[] = [
   {
     id: '1',
     username: 'User 1',
@@ -27,15 +28,37 @@ const users: UserInfo[] = [
   },
 ];
 
-export const getUser = (userId: string | undefined): UserInfo[] => {
-  if (!userId) return users;
+const validateIdUuid = (id: string) : boolean => {
+    let result = false;
+    try{
+        validate(id);
+        result = true;
+    } catch (error) {}
+    return result;
+}
+
+export const getUser = (userId: string | undefined): {code: number, data: UserInfo[]} => {
+  if (!userId) return {
+    code: 200,
+    data: users
+  };
+  const validateId = validateIdUuid(userId);
+  if (!validateId) {
+    return {
+        code: 400,
+        data: []
+    };
+  }
   const result: UserInfo[] = [];
   users
     .filter((user: UserInfo) => user.id === userId)
     .forEach((user: UserInfo) => {
       result.push(user);
     });
-  return result;
+  return {
+    code: result.length === 1 ? 200 : 404,
+    data: result
+  };
 };
 
 export const addUser = (data: string): Partial<UserInfo> => {
@@ -64,7 +87,7 @@ export const addUser = (data: string): Partial<UserInfo> => {
             }
         });
         const parsedUser = {
-            id: String(users.length + 1),
+            id: v4(),
             username,
             age,
             hobbies
@@ -76,3 +99,16 @@ export const addUser = (data: string): Partial<UserInfo> => {
     } catch (error) {};
     return result;
 }
+
+export const deleteUser = (userId: string | undefined) : number => {
+    if (!userId || !validateIdUuid(userId)) return 400;
+    const filteredUsers = users.filter((user: UserInfo) => user.id !== userId);
+    if (users.length === filteredUsers.length) {
+        return 404;
+    }
+    else {
+        users = [];
+        filteredUsers.forEach((x: UserInfo) => users.push(x));
+        return 204;
+    }    
+};

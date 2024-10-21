@@ -1,6 +1,6 @@
 import { ServerResponse, IncomingMessage } from 'http';
 import { parse } from 'url';
-import { getUser, addUser } from '../controller/userContoller.js';
+import { getUser, addUser, deleteUser } from '../controller/userContoller.js';
 import { CrudOperations, ResponseInfo } from '../types/types.js';
 
 const generateResponse = (data: ResponseInfo) => {
@@ -25,13 +25,17 @@ export const handleServerResponse = (req: IncomingMessage, res: ServerResponse) 
     switch (method) {
       case CrudOperations.GET:
         const getResult = getUser(userId);
-        getResult.length
-          ? generateResponse({
-              res,
-              statusCode: 200,
-              message: getResult,
-            })
-          : generateResponse({ res, statusCode: 404, message: 'Page not found' });
+        if (getResult.code === 200) {
+          generateResponse({
+            res,
+            statusCode: 200,
+            message: getResult.data,
+          });
+        } else if (getResult.code === 404) {
+          generateResponse({ res, statusCode: 404, message: "User with this id doesn't found" });
+        } else {
+          generateResponse({ res, statusCode: 400, message: "Invalid user id" });
+        }
         break;
       case CrudOperations.POST:
         if (pathname !== endpoint) {
@@ -48,12 +52,24 @@ export const handleServerResponse = (req: IncomingMessage, res: ServerResponse) 
             } else {
               generateResponse({ res, statusCode: 404, message: "Body doesn't contain required fields" });
             }          
-          });  
+          }); 
         }
         break;
       case CrudOperations.DELETE:
-      case CrudOperations.PUT:
+        if (!userId) {
+          generateResponse({ res, statusCode: 404, message: 'Page not found' });
+        } else {
+          const deleteResult = deleteUser(userId);
+          if (deleteResult === 204) {
+            generateResponse({ res, statusCode: 204, message: '' });
+          } else if (deleteResult === 404) {
+            generateResponse({ res, statusCode: 404, message: "User with this id doesn't found" });
+          } else {
+            generateResponse({ res, statusCode: 400, message: "Invalid user id" });
+          }
+        }
         break;
+      case CrudOperations.PUT:
       default:
         generateResponse({ res, statusCode: 404, message: 'Page not found' });
     }
