@@ -1,9 +1,10 @@
-import http from 'http';
-import dotenv from 'dotenv';
+import { createServer } from 'http';
+import { config } from 'dotenv';
+import { handleServerResponse } from './routes/routes.js';
 
-dotenv.config();
+config();
 
-const server = http.createServer();
+const server = createServer(handleServerResponse);
 
 const PORT = process.env['PORT'] || 3000;
 server.listen(PORT, () => {
