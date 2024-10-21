@@ -1,6 +1,6 @@
 import { ServerResponse, IncomingMessage } from 'http';
 import { parse } from 'url';
-import { getUser, addUser, deleteUser } from '../controller/userContoller.js';
+import { getUser, addUser, deleteUser, updateUser } from '../controller/userContoller.js';
 import { CrudOperations, ResponseInfo } from '../types/types.js';
 
 const generateResponse = (data: ResponseInfo) => {
@@ -34,25 +34,33 @@ export const handleServerResponse = (req: IncomingMessage, res: ServerResponse) 
         } else if (getResult.code === 404) {
           generateResponse({ res, statusCode: 404, message: "User with this id doesn't found" });
         } else {
-          generateResponse({ res, statusCode: 400, message: "Invalid user id" });
+          generateResponse({ res, statusCode: 400, message: 'Invalid user id' });
         }
         break;
       case CrudOperations.POST:
         if (pathname !== endpoint) {
           generateResponse({ res, statusCode: 404, message: 'Page not found' });
         } else {
-          let requestBody = "";
-          req.on("data", (chunk) => requestBody += chunk.toString());
+          let requestBody = '';
+          req.on('data', (chunk) => (requestBody += chunk.toString()));
           req.on('end', () => {
-            if (requestBody.trim() !== "") {
+            if (requestBody.trim() !== '') {
               const postResult = addUser(requestBody);
-              postResult.id === ""
-              ? generateResponse({ res, statusCode: 404, message: "Body doesn't contain required fields" })
-              : generateResponse({ res, statusCode: 201, message: [postResult] });
+              postResult.id === ''
+                ? generateResponse({
+                    res,
+                    statusCode: 404,
+                    message: "Body doesn't contain required fields",
+                  })
+                : generateResponse({ res, statusCode: 201, message: [postResult] });
             } else {
-              generateResponse({ res, statusCode: 404, message: "Body doesn't contain required fields" });
-            }          
-          }); 
+              generateResponse({
+                res,
+                statusCode: 404,
+                message: "Body doesn't contain required fields",
+              });
+            }
+          });
         }
         break;
       case CrudOperations.DELETE:
@@ -65,11 +73,34 @@ export const handleServerResponse = (req: IncomingMessage, res: ServerResponse) 
           } else if (deleteResult === 404) {
             generateResponse({ res, statusCode: 404, message: "User with this id doesn't found" });
           } else {
-            generateResponse({ res, statusCode: 400, message: "Invalid user id" });
+            generateResponse({ res, statusCode: 400, message: 'Invalid user id' });
           }
         }
         break;
       case CrudOperations.PUT:
+        if (!userId) {
+          generateResponse({ res, statusCode: 404, message: 'Page not found' });
+        } else {
+          let requestBody = '';
+          req.on('data', (chunk) => (requestBody += chunk.toString()));
+          req.on('end', () => {
+            if (requestBody.trim() !== '') {
+              const putResult = updateUser(userId, requestBody);
+              if (putResult.code === 200 && putResult.data) {
+                generateResponse({ res, statusCode: 200, message: [putResult.data] });
+              } else if (putResult.code === 404) {
+                generateResponse({
+                  res,
+                  statusCode: 404,
+                  message: "User with this id doesn't found",
+                });
+              } else {
+                generateResponse({ res, statusCode: 400, message: 'Invalid user id' });
+              }
+            }
+          });
+        }
+        break;
       default:
         generateResponse({ res, statusCode: 404, message: 'Page not found' });
     }
